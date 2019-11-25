@@ -23,11 +23,11 @@ public class Sovellus {
                 return B;
             } else if (luettu.equals("C") || luettu.equals("c")) {
                 return C;
-            } else {
-                System.out.println("Virheellinen joukko! " + luettu);
-                System.out.print("Yritä uudelleen!");
-                luettu = luku();
-            }
+	    }
+            System.out.println("Virheellinen joukko! " + luettu);
+            System.out.print("Yritä uudelleen!");
+            luettu = luku();
+            
         }
     }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ohtu.intjoukkosovellus.JoukkoOperaatiotTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2019-11-25T19:07:03" hostname="lauri-Lenovo-B50-30" time="0.004">
+  <properties/>
+  <testcase name="testLeikkaus" classname="ohtu.intjoukkosovellus.JoukkoOperaatiotTest" time="0.001"/>
+  <testcase name="testYhdiste" classname="ohtu.intjoukkosovellus.JoukkoOperaatiotTest" time="0.001"/>
+  <testcase name="testErotus" classname="ohtu.intjoukkosovellus.JoukkoOperaatiotTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

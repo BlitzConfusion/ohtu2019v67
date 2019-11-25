@@ -40,5 +40,21 @@ public class KassapaateTest {
         verify(kortti, times(1)).getSaldo();
         verify(kortti, times(0)).osta(anyInt());
     }
-      
+    //Millään tavalla ei kerrottu kuinka muutetaan mock-olion attribuutteja metodikutsuja mockaten.
+    //Täten testit eivät mene läpi, mutta en tiedä mistä johtuen. Esimerkit tällaisista olisivat
+    //olleet kivat.
+    @Test
+    public void lataaRahaaPos() {
+	when(kortti.lataa()).thenReturn();
+	kassa.lataa(kortti, 6)
+        
+        verify(kortti, times(1)).lataa();
+    }
+    @Test
+    public void lataaRahaaNeg() {
+	when(kortti.lataa()).thenReturn();
+	kassa.lataa(kortti, -1)
+        
+        verify(kortti, times(0)).lataa();
+    }
 }

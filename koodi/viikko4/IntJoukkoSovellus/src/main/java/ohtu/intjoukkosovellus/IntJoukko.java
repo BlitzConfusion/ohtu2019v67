@@ -3,61 +3,54 @@ package ohtu.intjoukkosovellus;
 
 public class IntJoukko {
 
-    public final static int KAPASITEETTI = 5, // aloitustalukon koko
-                            OLETUSKASVATUS = 5;  // luotava uusi taulukko on 
-    // näin paljon isompi kuin vanha
     private int kasvatuskoko;     // Uusi taulukko on tämän verran vanhaa suurempi.
     private int[] ljono;      // Joukon luvut säilytetään taulukon alkupäässä. 
     private int alkioidenLkm;    // Tyhjässä joukossa alkioiden_määrä on nolla. 
+    private int[] apuTaulu1;	// Laskutoimitusten aputaulu.
+    private int[] apuTaulu2;    // Laskutoimitusten toinen aputaulu.
+    private IntJoukko tulos;    // Laskutoimitusten tulos.
+    //Olisin käyttänyt näitä kolmea kolmen viimeisen metodin copy-pasten poistoon, mutta
+    //tuloksena oli töysin mystisesti compilation error joka kerta. :(
 
     public IntJoukko() {
-        ljono = new int[KAPASITEETTI];
-        for (int i = 0; i < ljono.length; i++) {
-            ljono[i] = 0;
-        }
-        alkioidenLkm = 0;
-        this.kasvatuskoko = OLETUSKASVATUS;
+	//Oletuskoko ja -kapasiteetti ovat 5.
+        initToZero(5, 5);
     }
 
     public IntJoukko(int kapasiteetti) {
         if (kapasiteetti < 0) {
             return;
         }
-        ljono = new int[kapasiteetti];
-        for (int i = 0; i < ljono.length; i++) {
-            ljono[i] = 0;
-        }
-        alkioidenLkm = 0;
-        this.kasvatuskoko = OLETUSKASVATUS;
+	//Oletuskapasiteetti on 5.
+        initToZero(kapasiteetti, 5);
 
     }
     
     
     public IntJoukko(int kapasiteetti, int kasvatuskoko) {
         if (kapasiteetti < 0) {
-            throw new IndexOutOfBoundsException("Kapasitteetti väärin");//heitin vaan jotain :D
+            throw new IndexOutOfBoundsException("Kapasitteetti negatiivinen");//Korjattu
         }
         if (kasvatuskoko < 0) {
-            throw new IndexOutOfBoundsException("kapasiteetti2");//heitin vaan jotain :D
+            throw new IndexOutOfBoundsException("kasvatuskoko negatiivinen");//Korjattu
         }
-        ljono = new int[kapasiteetti];
-        for (int i = 0; i < ljono.length; i++) {
+        initToZero(kapasiteetti, kasvatuskoko);
+
+    }
+
+    private void initToZero(int kapasiteetti, int kasvatuskoko) {
+	ljono = new int[kapasiteetti];
+	for (int i = 0; i < ljono.length; i++) {
             ljono[i] = 0;
         }
         alkioidenLkm = 0;
         this.kasvatuskoko = kasvatuskoko;
-
     }
 
     public boolean lisaa(int luku) {
 
-        int eiOle = 0;
-        if (alkioidenLkm == 0) {
-            ljono[0] = luku;
-            alkioidenLkm++;
-            return true;
-        } else {
-        }
+        
+        //Sisäkkäiset if, mutten varma kuinka poistaa tekemättä monimutkaisempaa.
         if (!kuuluu(luku)) {
             ljono[alkioidenLkm] = luku;
             alkioidenLkm++;
@@ -74,40 +67,29 @@ public class IntJoukko {
     }
 
     public boolean kuuluu(int luku) {
-        int on = 0;
         for (int i = 0; i < alkioidenLkm; i++) {
             if (luku == ljono[i]) {
-                on++;
+                return true;
             }
         }
-        if (on > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 
     public boolean poista(int luku) {
-        int kohta = -1;
         int apu;
+	//Sisäkkäiset for, mutta tässä tapauksessa funktionaalista.
         for (int i = 0; i < alkioidenLkm; i++) {
             if (luku == ljono[i]) {
-                kohta = i; //siis luku löytyy tuosta kohdasta :D
-                ljono[kohta] = 0;
-                break;
+                ljono[i] = 0;
+                for (int j = i; j < alkioidenLkm - 1; j++) {
+                    apu = ljono[j];
+                    ljono[j] = ljono[j + 1];
+                    ljono[j + 1] = apu;
+                }
+                alkioidenLkm--;
+                return true;
             }
         }
-        if (kohta != -1) {
-            for (int j = kohta; j < alkioidenLkm - 1; j++) {
-                apu = ljono[j];
-                ljono[j] = ljono[j + 1];
-                ljono[j + 1] = apu;
-            }
-            alkioidenLkm--;
-            return true;
-        }
-
-
         return false;
     }
 
@@ -149,32 +131,33 @@ public class IntJoukko {
         return taulu;
     }
    
-
+    //Näiden kolmen metodin ensimmäisistä kolmesta rivistä yritin uutta metodia,
+    //mutta jostain syystä näistä tuli aina compile-error.
     public static IntJoukko yhdiste(IntJoukko a, IntJoukko b) {
-        IntJoukko x = new IntJoukko();
+        IntJoukko yhdistelma = new IntJoukko();
         int[] aTaulu = a.toIntArray();
         int[] bTaulu = b.toIntArray();
         for (int i = 0; i < aTaulu.length; i++) {
-            x.lisaa(aTaulu[i]);
+            yhdistelma.lisaa(aTaulu[i]);
         }
         for (int i = 0; i < bTaulu.length; i++) {
-            x.lisaa(bTaulu[i]);
+            yhdistelma.lisaa(bTaulu[i]);
         }
-        return x;
+        return yhdistelma;
     }
 
     public static IntJoukko leikkaus(IntJoukko a, IntJoukko b) {
-        IntJoukko y = new IntJoukko();
+        IntJoukko leikattu = new IntJoukko();
         int[] aTaulu = a.toIntArray();
         int[] bTaulu = b.toIntArray();
         for (int i = 0; i < aTaulu.length; i++) {
             for (int j = 0; j < bTaulu.length; j++) {
                 if (aTaulu[i] == bTaulu[j]) {
-                    y.lisaa(bTaulu[j]);
+                    leikattu.lisaa(bTaulu[j]);
                 }
             }
         }
-        return y;
+        return leikattu;
 
     }
     
@@ -190,6 +173,11 @@ public class IntJoukko {
         }
  
         return z;
+    }
+    //Yritin luoda aputaulukot, joita kutsuttaisiin kolmessa ylemmässä metodissa, muttei toimi.
+    private void apuTaulutus( IntJoukko x, IntJoukko y) {
+	apuTaulu1 = x.toIntArray();
+	apuTaulu2 = y.toIntArray();
     }
         
 }
